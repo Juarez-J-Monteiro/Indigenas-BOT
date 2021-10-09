@@ -2,7 +2,7 @@ const ytdl = require('ytdl-core')
 const Discord = require('discord.js');
 const google = require('googleapis')
 
-module.exports.run = async(client, msg, args, servidores, prefixo, youtube, requerente, configs) => {
+module.exports.run = async(client, msg, args, servidores, prefixo, configs) => {
     msg.reply('Mandei na sua DM!')
     const embed = new Discord.MessageEmbed()
         .setColor([0,132,218])

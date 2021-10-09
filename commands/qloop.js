@@ -3,7 +3,6 @@ const ytdl = require('ytdl-core')
 module.exports.run = async(client, msg, args, servidores, prefixo, youtube, requerente, configs) => {
     const tocaLoop = (msg) => {
         if (servidores[msg.guild.id].disp === true) { //verifica se está tocando uma música
-            console.log('Iniciei')
             var tocando = servidores[msg.guild.id].fila[0]
 
             // toca música
@@ -14,12 +13,10 @@ module.exports.run = async(client, msg, args, servidores, prefixo, youtube, requ
                 servidores[msg.guild.id].fila.shift()
                 servidores[msg.guild.id].titulo.shift()
                 servidores[msg.guild.id].requisitado.shift()
-                console.log(servidores[msg.guild.id].fila)
                 servidores[msg.guild.id].estouTocando = true
-                console.log('Iniciei 2')
+                servidores[msg.guild.id].dispatcher = null
                 if (servidores[msg.guild.id].fila.length > 0) { //se a fila for maior que 0 ele toca a próxima
                     tocaLoop(msg)                               //música.
-                    console.log('Próxima')
                 }
                 else { //repoem as música para reiniciar o fila
                     for (let i in servidores[msg.guild.id].loop) {
@@ -33,13 +30,11 @@ module.exports.run = async(client, msg, args, servidores, prefixo, youtube, requ
                     }
                     servidores[msg.guild.id].disp = true
                     tocaLoop(msg)
-                    console.log('Repetindo')
                 }
             })
         }
         else { //O else faz com que a música n seja interrompida quando o loop é solicitado.
             servidores[msg.guild.id].dispatcher.on('finish', () => {
-                console.log('Iniciei')
                 var tocando = servidores[msg.guild.id].fila[0]
 
                 //toca a música
@@ -50,12 +45,10 @@ module.exports.run = async(client, msg, args, servidores, prefixo, youtube, requ
                     servidores[msg.guild.id].fila.shift()
                     servidores[msg.guild.id].titulo.shift()
                     servidores[msg.guild.id].requisitado.shift()
-                    console.log(servidores[msg.guild.id].fila)
                     servidores[msg.guild.id].estouTocando = true
-                    console.log('Iniciei 2')
+                    servidores[msg.guild.id].dispatcher = null
                     if (servidores[msg.guild.id].fila.length > 0) {
                         tocaLoop(msg)
-                        console.log('Próxima')
                     }
                     else { //repoem as música para reiniciar o fila
                         for (let i in servidores[msg.guild.id].loop) {
@@ -69,7 +62,6 @@ module.exports.run = async(client, msg, args, servidores, prefixo, youtube, requ
                         }
                         servidores[msg.guild.id].disp = true
                         tocaLoop(msg)
-                        console.log('Repetindo')
                     }
                 })
             })
@@ -80,7 +72,7 @@ module.exports.run = async(client, msg, args, servidores, prefixo, youtube, requ
         msg.channel.send('Minha fila está vazia!')
     }
     else if (servidores[msg.guild.id].loopIn === true) {
-        msg.channel.send('Loop desativado!')
+        msg.channel.send('Loop de fila desativado!')
         servidores[msg.guild.id].dispatcher.on('finish', () => {
             servidores[msg.guild.id].loopIn = false
             servidores[msg.guild.id].dispatcher.pause()
@@ -110,8 +102,7 @@ module.exports.run = async(client, msg, args, servidores, prefixo, youtube, requ
         for (let i in servidores[msg.guild.id].fila) {
             servidores[msg.guild.id].loop.push(servidores[msg.guild.id].fila[i])
         }
-        console.log(servidores[msg.guild.id].loop)
-        msg.channel.send('Loop ativado!')
+        msg.channel.send('Loop de fila ativado!')
         tocaLoop(msg)
     }
 

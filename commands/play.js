@@ -1,5 +1,4 @@
 const ytdl = require('ytdl-core')
-const ytsr = require('ytsr')
 const Discord = require('discord.js');
 const google = require('googleapis')
 const { getData, getPreview, getTracks } = require('spotify-url-info')
@@ -16,12 +15,16 @@ module.exports.run = async(client, msg, args, servidores, prefixo, youtube, requ
             servidores[msg.guild.id].dispatcher = servidores[msg.guild.id].connection.play(ytdl(tocando, configs.YTDL))
 
             servidores[msg.guild.id].dispatcher.on('finish', () => {
-                if (servidores[msg.guild.id].loopM === false || servidores[msg.guild.id].loopIn === false) {
-                    servidores[msg.guild.id].fila.shift()
-                    servidores[msg.guild.id].titulo.shift()
-                    servidores[msg.guild.id].requisitado.shift()
+                if (servidores[msg.guild.id].loopM === false) {
+                    if (servidores[msg.guild.id].loopIn === true) {}
+                    else {
+                        servidores[msg.guild.id].fila.shift()
+                        servidores[msg.guild.id].titulo.shift()
+                        servidores[msg.guild.id].requisitado.shift()
+                    }
                 }
                 servidores[msg.guild.id].estouTocando = false
+                servidores[msg.guild.id].dispatcher = null
                 if (servidores[msg.guild.id].fila.length > 0) {
                     tocaMusicas(msg)
                 }
@@ -164,12 +167,11 @@ module.exports.run = async(client, msg, args, servidores, prefixo, youtube, requ
             song = {
                 title: songInfo.videoDetails.title,
                 url: songInfo.videoDetails.video_url,
-                thumb: songInfo.videoDetails.thumbnails[4].url
+                thumb: songInfo.videoDetails.thumbnails[0].url
             }
         } catch (error) {
             console.error(error)
         }
-        console.log(song.thumb)
         servidores[msg.guild.id].titulo.push(song.title)
         servidores[msg.guild.id].fila.push(oQueTocar)
         servidores[msg.guild.id].requisitado.push(requerente)

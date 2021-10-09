@@ -2,7 +2,7 @@ const ytdl = require('ytdl-core')
 const Discord = require('discord.js');
 const google = require('googleapis')
 
-module.exports.run = async(client, msg, args, servidores, prefixo, youtube, requerente, configs) => {
+module.exports.run = async(client, msg, args, servidores) => {
     if (servidores[msg.guild.id].estouTocando === false || servidores[msg.guild.id].dispatcher === null) {
         msg.channel.send('Não estou tocando nada!')
     }
