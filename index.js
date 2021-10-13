@@ -21,11 +21,11 @@ const youtube = new google.youtube_v3.Youtube({
 })
 const client = new Discord.Client({
     presence: {
-     status: 'online',
-     activity: {
+     status: 'invisible',
+     /*activity: {
       name: `${configs.PREFIX}help`,
       type: 'LISTENING',
-     },
+     },*/
     },
 })
 
@@ -61,7 +61,7 @@ client.on("ready", () => {
     console.log('Estou online!');
 });
 
-var change = false
+/*var change = false
 function changeAct() {
     if (change === false) {
         client.user.setActivity(`Spotify playlists are now supported!`, {type: 'PLAYING'})
@@ -72,7 +72,7 @@ function changeAct() {
         change = false
     }
 }
-setInterval(changeAct, 10000)
+setInterval(changeAct, 10000)*/
 
 client.on("message", async (msg) => {
 

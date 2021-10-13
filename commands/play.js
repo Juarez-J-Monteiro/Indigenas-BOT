@@ -10,9 +10,11 @@ module.exports.run = async(client, msg, args, servidores, prefixo, youtube, requ
 
     const tocaMusicas = (msg) => {
         if (servidores[msg.guild.id].estouTocando === false) {
+            console.log('tocaMusicas()')
             const tocando = servidores[msg.guild.id].fila[0]
             servidores[msg.guild.id].estouTocando = true
             servidores[msg.guild.id].dispatcher = servidores[msg.guild.id].connection.play(ytdl(tocando, configs.YTDL))
+            servidores[msg.guild.id].disp = true
 
             servidores[msg.guild.id].dispatcher.on('finish', () => {
                 if (servidores[msg.guild.id].loopM === false) {
@@ -74,7 +76,7 @@ module.exports.run = async(client, msg, args, servidores, prefixo, youtube, requ
                 }
             })
         
-        const temp = parseInt(listaResultado.length)*900
+        const temp = parseInt(listaResultado.length)*1000
         msg.channel.send('Adicionando músicas à fila...')
             .then((mms) => {
                 mms.delete({timeout: temp}).catch(O_o => {})
