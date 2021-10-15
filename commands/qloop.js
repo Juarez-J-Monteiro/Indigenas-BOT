@@ -2,7 +2,7 @@ const ytdl = require('ytdl-core')
 
 module.exports.run = async(client, msg, args, servidores, prefixo, youtube, requerente, configs) => {
 
-    const tocaMusicas = (msg) => { // When somemone disables the qloop, this function is called to continue the queue
+    /*const tocaMusicas = (msg) => { // When somemone disables the qloop, this function is called to continue the queue
         if (servidores[msg.guild.id].estouTocando === false) {
             const tocando = servidores[msg.guild.id].fila[0]
             servidores[msg.guild.id].estouTocando = true
@@ -62,30 +62,23 @@ module.exports.run = async(client, msg, args, servidores, prefixo, youtube, requ
                 })
             })
 
-    }
+    }*/
     
     if (servidores[msg.guild.id].estouTocando === false) {
         msg.channel.send('Minha fila está vazia!')
     }
     else if (servidores[msg.guild.id].loopIn === true) {
         msg.channel.send('Loop de fila desativado!')
-        servidores[msg.guild.id].fila.shift()
-        servidores[msg.guild.id].titulo.shift()
-        servidores[msg.guild.id].requisitado.shift()
-        servidores[msg.guild.id].dispatcher.on('finish', () => {
-            servidores[msg.guild.id].loopIn = false
-            servidores[msg.guild.id].lofila = []
-            servidores[msg.guild.id].lotitulo = []
-            servidores[msg.guild.id].lorequisitado = []
-            tocaMusicas(msg)
-        })
         
-
+        servidores[msg.guild.id].loopIn = false
+        servidores[msg.guild.id].lofila = []
+        servidores[msg.guild.id].lotitulo = []
+        servidores[msg.guild.id].lorequisitado = []    
     }
     else {
         servidores[msg.guild.id].loopIn = true
 
-        //cria a fila de loop
+        //Make the loop queue
         for (let i in servidores[msg.guild.id].requisitado) {
             servidores[msg.guild.id].lorequisitado.push(servidores[msg.guild.id].requisitado[i])
         }
@@ -96,7 +89,6 @@ module.exports.run = async(client, msg, args, servidores, prefixo, youtube, requ
             servidores[msg.guild.id].loop.push(servidores[msg.guild.id].fila[i])
         }
         msg.channel.send('Loop de fila ativado!')
-        tocaLoop(msg)
     }
 
 }

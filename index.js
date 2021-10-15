@@ -1,5 +1,4 @@
-const Discord = require('discord.js');
-const ytdl = require('ytdl-core');
+const Discord = require('discord.js')
 const configs = require('./config.json')
 const google = require('googleapis')
 const fs = require('fs');
@@ -21,11 +20,11 @@ const youtube = new google.youtube_v3.Youtube({
 })
 const client = new Discord.Client({
     presence: {
-     status: 'invisible',
-     /*activity: {
+     status: 'online',
+     activity: {
       name: `${configs.PREFIX}help`,
       type: 'LISTENING',
-     },*/
+     },
     },
 })
 
@@ -40,6 +39,8 @@ client.on("guildCreate", (guild) => {
     servidores[guild.id] = {
         connection: null,
         dispatcher: null,
+        nowPlaying: '',
+        SaveRequisitado: '',
         titulo: [],
         lotitulo: [],
         disp: false,
@@ -61,7 +62,7 @@ client.on("ready", () => {
     console.log('Estou online!');
 });
 
-/*var change = false
+var change = false
 function changeAct() {
     if (change === false) {
         client.user.setActivity(`Spotify playlists are now supported!`, {type: 'PLAYING'})
@@ -72,25 +73,30 @@ function changeAct() {
         change = false
     }
 }
-setInterval(changeAct, 10000)*/
+setInterval(changeAct, 10000)
 
 client.on("message", async (msg) => {
 
     // filtro
-    let requerente = msg.author.username
 
-    if (!msg.guild) return;
+    if (!msg.guild) return
 
-    if (!msg.content.startsWith(prefixo)) return;
+    if(msg.author.bot) return
+
+    if (!msg.content.startsWith(prefixo)) return
 
     if (!msg.member.voice.channel) {
         if (msg.content === prefixo + 'help'){
             
         }
         else {
-            msg.channel.send('Entra na porra de um canal de voz!')
+            msg.channel.send('Entre em um canal de voz!')
         }
     }
+
+    if (msg.content[1] == prefixo) return
+
+    let requerente = msg.author.username
 
     const args = msg.content.trim()
         .slice(prefixo.length)
@@ -118,6 +124,8 @@ const loadServers = () => {
                 servidores[objLe.servers[i]] = {
                     connection: null,
                     dispatcher: null,
+                    nowPlaying: '',
+                    SaveRequisitado: '',
                     titulo: [],
                     lotitulo: [],
                     disp: false,

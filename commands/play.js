@@ -10,20 +10,37 @@ module.exports.run = async(client, msg, args, servidores, prefixo, youtube, requ
 
     const tocaMusicas = (msg) => {
         if (servidores[msg.guild.id].estouTocando === false) {
-            console.log('tocaMusicas()')
             const tocando = servidores[msg.guild.id].fila[0]
+            servidores[msg.guild.id].nowPlaying = servidores[msg.guild.id].fila[0]
+            servidores[msg.guild.id].SaveRequisitado = requerente
             servidores[msg.guild.id].estouTocando = true
             servidores[msg.guild.id].dispatcher = servidores[msg.guild.id].connection.play(ytdl(tocando, configs.YTDL))
             servidores[msg.guild.id].disp = true
 
             servidores[msg.guild.id].dispatcher.on('finish', () => {
-                if (servidores[msg.guild.id].loopM === false) {
-                    if (servidores[msg.guild.id].loopIn === true) {}
-                    else {
-                        servidores[msg.guild.id].fila.shift()
-                        servidores[msg.guild.id].titulo.shift()
-                        servidores[msg.guild.id].requisitado.shift()
+                if (servidores[msg.guild.id].loopM === true) {
+
+                }
+                else if (servidores[msg.guild.id].loopIn === true) {
+                    servidores[msg.guild.id].fila.shift()
+                    servidores[msg.guild.id].titulo.shift()
+                    servidores[msg.guild.id].requisitado.shift()
+                    if (!servidores[msg.guild.id].fila.length > 0) {
+                        for (let i in servidores[msg.guild.id].loop) {
+                            servidores[msg.guild.id].fila.push(servidores[msg.guild.id].loop[i])
+                        }
+                        for (let i in servidores[msg.guild.id].lorequisitado) {
+                            servidores[msg.guild.id].requisitado.push(servidores[msg.guild.id].lorequisitado[i])
+                        }
+                        for (let i in servidores[msg.guild.id].lotitulo) {
+                            servidores[msg.guild.id].titulo.push(servidores[msg.guild.id].lotitulo[i])
+                        }
                     }
+                }
+                else {
+                    servidores[msg.guild.id].fila.shift()
+                    servidores[msg.guild.id].titulo.shift()
+                    servidores[msg.guild.id].requisitado.shift()
                 }
                 servidores[msg.guild.id].estouTocando = false
                 servidores[msg.guild.id].dispatcher = null
@@ -31,6 +48,8 @@ module.exports.run = async(client, msg, args, servidores, prefixo, youtube, requ
                     tocaMusicas(msg)
                 }
                 else {
+                    servidores[msg.guild.id].nowPlaying = ''
+                    servidores[msg.guild.id].SaveRequisitado = ''
                     servidores[msg.guild.id].dispatcher = null
                 }
             })
